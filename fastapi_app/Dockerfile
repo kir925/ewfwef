@@ -1,18 +1,13 @@
-# Используем официальный образ Python
+# fastapi_app/Dockerfile
 FROM python:3.9-slim
 
-# Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
 
-# Копируем файл requirements.txt в рабочую директорию
+COPY ../data_downloader ./data_downloader
 COPY requirements.txt .
 
-# Устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем все файлы в рабочую директорию
 COPY . .
 
-# Запускаем приложение
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-
