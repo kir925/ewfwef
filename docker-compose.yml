@@ -1,21 +1,25 @@
-version: '3'
+version: '3.8'
 
 services:
+  fastapi_app:
+    build: ./fastapi_app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data_downloader:/app/data_downloader
+    depends_on:
+      - mqtt_broker
+
   mqtt_broker:
     image: eclipse-mosquitto
     ports:
       - "1883:1883"
       - "9001:9001"
 
-  fastapi_app:
-    build: ./fastapi_app
-    ports:
-      - "8000:8000"
-    depends_on:
-      - mqtt_broker
-
   rinex_streamer:
     build: ./src/rinex_streamer
+    volumes:
+      - ./src/rinex_streamer/ANTC00CHL:/app/data/rinex_files/ANTC00CHL
     depends_on:
       - mqtt_broker
 
@@ -29,3 +33,5 @@ services:
     depends_on:
       - mqtt_broker
 
+volumes:
+  rinex_data:
