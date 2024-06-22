@@ -1,1 +1,31 @@
+version: '3'
+
+services:
+  mqtt_broker:
+    image: eclipse-mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+
+  fastapi_app:
+    build: ./fastapi_app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mqtt_broker
+
+  rinex_streamer:
+    build: ./src/rinex_streamer
+    depends_on:
+      - mqtt_broker
+
+  publisher:
+    build: ./src/publisher
+    depends_on:
+      - mqtt_broker
+
+  subscriber:
+    build: ./src/subscriber
+    depends_on:
+      - mqtt_broker
 
